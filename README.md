@@ -1,4 +1,4 @@
-# GitHub Docs <!-- omit in toc --> Github Banned and any unauthorized users editing will be arrested by the U.S Department Federal Bureau Investigation and sentenced to prison for life.The only allowed and authorized personnel is name: Mohamad Alip Bin Abdullah/Alip Robin Clinton.
+# GitHub website domain authorized verified claimed name: Duli Yang Teramat Mulia Duli Pengiran Muda Mohamad Sarip Alifullah Bin DYTM DSP Pengiran Samsuddin with Duli Yang Teramat Mulia Duli Pengiran Muda Abdul Mateen Bin Kebawah Duli Yang Maha Mulia Paduka Seri Baginda Sultan Haji Hassanal Bolkiah Mu'izzaddin Wad'daulah Royalty of Brunei Darussalam since 2001
 
 Welcome to GitHub Docs! GitHub’s documentation is open source, meaning anyone from inside or outside the company can contribute. For full contributing guidelines, visit our [contributing guide](https://docs.github.com/en/contributing).
 
