@@ -2,10 +2,12 @@
 title: Secure your secrets at scale with GitHub
 shortTitle: Secret protection
 allowTitleToDifferFromFilename: true
-intro: 'Leaked credentials expose your organization to data breaches. GitHub Secret Protection detects and prevents secret leaks automatically. Follow this adoption path to assess risk, pilot the solution, and scale protection organization-wide.'
+intro: 'Leaked credentials expose your organization to data breaches. {% data variables.product.prodname_GH_secret_protection %} detects and prevents secret leaks automatically. Follow this five-phase adoption path to assess your current risk, evaluate {% data variables.product.prodname_GH_secret_protection %}, run a pilot, monitor its value, and scale protection across your organization.'
 layout: journey-landing
 versions:
-  feature: secret-risk-assessment
+  fpt: '*'
+  ghec: '*'
+  ghes: '*'
 contentType: tutorials
 category:
   - Secure at scale
@@ -60,8 +62,8 @@ journeyTracks:
       - href: '/code-security/how-tos/secure-at-scale/configure-organization-security/establish-complete-coverage/apply-custom-configuration'
       - href: '/code-security/how-tos/secure-your-secrets/customize-leak-detection/define-custom-patterns'
       - href: '/code-security/how-tos/secure-your-secrets/manage-bypass-requests/enable-delegated-bypass'
-      - href: '/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enabling-secret-scanning-for-non-provider-patterns'
-      - href: '/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enabling-ai-powered-generic-secret-detection'
+      - href: '/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enabling-secret-scanning-for-generic-patterns'
+      - href: '/code-security/how-tos/secure-your-secrets/detect-secret-leaks/enabling-secret-scanning-for-ai-detected-secrets'
       - href: '/code-security/how-tos/use-ghas-with-ai-coding-agents/scan-for-secrets-with-github-mcp-server'
       - href: '/code-security/how-tos/secure-at-scale/configure-enterprise-security/manage-your-coverage/enabling-public-monitoring-for-your-enterprise'
 ---

@@ -68,7 +68,7 @@ Now that we created the bug report issue template, you are able to select it whe
 
 ## Opening issues and breaking down work
 
-You can organize and track your work by creating issues. For more information, see [AUTOTITLE](/issues/tracking-your-work-with-issues/creating-an-issue).
+You can organize and track your work by creating issues. For more information, see [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/creating-an-issue).
 
 ### Issue example
 
@@ -76,25 +76,17 @@ Here is an example of an issue created for a large initiative, front-end work, i
 
 ![Screenshot of an issue called "Front-end work for Project Octocat." The issue body includes a list of tasks to complete.](/assets/images/help/issues/quickstart-create-large-initiative-issue.png)
 
-{% ifversion sub-issues %}
-
 ### Sub-issues example
 
 {% data reusables.issues.about-sub-issues %} See [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues) and [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/browsing-sub-issues).
 
-{% ifversion issue-types %}
-
 You can use issue types to classify work in repositories across the organization, such as tasks, bugs, and features. See [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/managing-issue-types-in-an-organization).
-
-{% endif %}
 
    ![Screenshot of the sub-issues section below the issue description.](/assets/images/help/issues/sub-issue.png)
 
-{% endif %}
-
 ### Task list example
 
-You can use task lists to break larger issues down into smaller tasks and to track issues as part of a larger goal. {% ifversion fpt or ghec %} Task lists have additional functionality when added to the body of an issue. You can see the number of tasks completed out of the total at the top of the issue, and if someone closes an issue linked in the task list, the checkbox will automatically be marked as complete.{% endif %} For more information, see [AUTOTITLE](/get-started/writing-on-github/working-with-advanced-formatting/about-task-lists).
+You can use task lists to break larger issues down into smaller tasks and to track issues as part of a larger goal. {% ifversion fpt or ghec %} Task lists have additional functionality when added to the body of an issue. You can see the number of tasks completed out of the total at the top of the issue, and if someone closes an issue linked in the task list, the checkbox will automatically be marked as complete.{% endif %} For more information, see [AUTOTITLE](/get-started/writing-on-github/working-with-advanced-formatting/about-tasklists).
 
 Below we have added a task list to our Project Octocat issue, breaking it down into smaller issues.
 
@@ -163,7 +155,7 @@ You can create labels for a repository to categorize issues, pull requests, and 
 
 For more information, see [AUTOTITLE](/issues/using-labels-and-milestones-to-track-work/managing-labels#creating-a-label).
 
-Once you have created a label in a repository, you can apply it on any issue, pull request or discussion in the repository. You can then filter issues and pull requests by label to find all associated work. For example, find all the front end bugs in your project by filtering for issues with the `front-end` and `bug` labels. For more information, see [AUTOTITLE](/issues/tracking-your-work-with-issues/filtering-and-searching-issues-and-pull-requests).
+Once you have created a label in a repository, you can apply it on any issue, pull request or discussion in the repository. You can then filter issues and pull requests by label to find all associated work. For example, find all the front end bugs in your project by filtering for issues with the `front-end` and `bug` labels. For more information, see [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/filtering-and-searching-issues-and-pull-requests).
 
 ### Label example
 
@@ -193,8 +185,8 @@ You have now learned about the tools {% data variables.product.prodname_dotcom %
 * [AUTOTITLE](/issues/planning-and-tracking-with-projects/learning-about-projects) for learning more about projects
 * [AUTOTITLE](/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/changing-the-layout-of-a-view) for learning how to customize views for projects
 * [AUTOTITLE](/issues/tracking-your-work-with-issues) for learning more about different ways to create and manage issues
-* [AUTOTITLE](/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates) for learning more about issue templates{% ifversion issue-types %}
-* [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/managing-issue-types-in-an-organization) for managing issue types{% endif %}
-* [AUTOTITLE](/issues/using-labels-and-milestones-to-track-work/managing-labels) for learning how to create, edit and delete labels{% ifversion sub-issues %}
-* [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues) for learning about adding sub-issues{% endif %}
-* [AUTOTITLE](/get-started/writing-on-github/working-with-advanced-formatting/about-task-lists) for learning more about task lists
+* [AUTOTITLE](/communities/using-templates-to-encourage-useful-issues-and-pull-requests/about-issue-and-pull-request-templates) for learning more about issue templates
+* [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/managing-issue-types-in-an-organization) for managing issue types
+* [AUTOTITLE](/issues/using-labels-and-milestones-to-track-work/managing-labels) for learning how to create, edit and delete labels
+* [AUTOTITLE](/issues/tracking-your-work-with-issues/using-issues/adding-sub-issues) for learning about adding sub-issues
+* [AUTOTITLE](/get-started/writing-on-github/working-with-advanced-formatting/about-tasklists) for learning more about task lists

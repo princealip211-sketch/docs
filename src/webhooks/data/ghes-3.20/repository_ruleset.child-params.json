@@ -370,6 +370,44 @@
                     "isRequired": true
                   },
                   {
+                    "type": "object",
+                    "name": "dismissal_restriction",
+                    "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                    "childParamsGroups": [
+                      {
+                        "type": "array of objects",
+                        "name": "allowed_actors",
+                        "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                        "childParamsGroups": [
+                          {
+                            "type": "integer",
+                            "name": "id",
+                            "description": "<p>ID of the actor that can dismiss reviews.</p>",
+                            "isRequired": true
+                          },
+                          {
+                            "type": "string",
+                            "name": "type",
+                            "description": "<p>The type of the actor</p>",
+                            "isRequired": true,
+                            "enum": [
+                              "User",
+                              "Team",
+                              "IntegrationInstallation",
+                              "RepositoryRole"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "boolean",
+                        "name": "enabled",
+                        "description": "<p>Whether to restrict review dismissal to specific actors.</p>",
+                        "isRequired": true
+                      }
+                    ]
+                  },
+                  {
                     "type": "boolean",
                     "name": "require_code_owner_review",
                     "description": "<p>Require an approving review in pull requests that modify files that have a designated code owner.</p>",
@@ -886,7 +924,7 @@
           {
             "type": "object",
             "name": "copilot_code_review",
-            "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.</p>",
+            "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.</p>",
             "childParamsGroups": [
               {
                 "type": "string",
@@ -1418,6 +1456,44 @@
                     "isRequired": true
                   },
                   {
+                    "type": "object",
+                    "name": "dismissal_restriction",
+                    "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                    "childParamsGroups": [
+                      {
+                        "type": "array of objects",
+                        "name": "allowed_actors",
+                        "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                        "childParamsGroups": [
+                          {
+                            "type": "integer",
+                            "name": "id",
+                            "description": "<p>ID of the actor that can dismiss reviews.</p>",
+                            "isRequired": true
+                          },
+                          {
+                            "type": "string",
+                            "name": "type",
+                            "description": "<p>The type of the actor</p>",
+                            "isRequired": true,
+                            "enum": [
+                              "User",
+                              "Team",
+                              "IntegrationInstallation",
+                              "RepositoryRole"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "boolean",
+                        "name": "enabled",
+                        "description": "<p>Whether to restrict review dismissal to specific actors.</p>",
+                        "isRequired": true
+                      }
+                    ]
+                  },
+                  {
                     "type": "boolean",
                     "name": "require_code_owner_review",
                     "description": "<p>Require an approving review in pull requests that modify files that have a designated code owner.</p>",
@@ -1934,7 +2010,7 @@
           {
             "type": "object",
             "name": "copilot_code_review",
-            "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.</p>",
+            "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.</p>",
             "childParamsGroups": [
               {
                 "type": "string",
@@ -2466,6 +2542,44 @@
                     "isRequired": true
                   },
                   {
+                    "type": "object",
+                    "name": "dismissal_restriction",
+                    "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                    "childParamsGroups": [
+                      {
+                        "type": "array of objects",
+                        "name": "allowed_actors",
+                        "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                        "childParamsGroups": [
+                          {
+                            "type": "integer",
+                            "name": "id",
+                            "description": "<p>ID of the actor that can dismiss reviews.</p>",
+                            "isRequired": true
+                          },
+                          {
+                            "type": "string",
+                            "name": "type",
+                            "description": "<p>The type of the actor</p>",
+                            "isRequired": true,
+                            "enum": [
+                              "User",
+                              "Team",
+                              "IntegrationInstallation",
+                              "RepositoryRole"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "type": "boolean",
+                        "name": "enabled",
+                        "description": "<p>Whether to restrict review dismissal to specific actors.</p>",
+                        "isRequired": true
+                      }
+                    ]
+                  },
+                  {
                     "type": "boolean",
                     "name": "require_code_owner_review",
                     "description": "<p>Require an approving review in pull requests that modify files that have a designated code owner.</p>",
@@ -2982,7 +3096,7 @@
           {
             "type": "object",
             "name": "copilot_code_review",
-            "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.</p>",
+            "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.</p>",
             "childParamsGroups": [
               {
                 "type": "string",
@@ -3545,6 +3659,44 @@
                         "isRequired": true
                       },
                       {
+                        "type": "object",
+                        "name": "dismissal_restriction",
+                        "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                        "childParamsGroups": [
+                          {
+                            "type": "array of objects",
+                            "name": "allowed_actors",
+                            "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                            "childParamsGroups": [
+                              {
+                                "type": "integer",
+                                "name": "id",
+                                "description": "<p>ID of the actor that can dismiss reviews.</p>",
+                                "isRequired": true
+                              },
+                              {
+                                "type": "string",
+                                "name": "type",
+                                "description": "<p>The type of the actor</p>",
+                                "isRequired": true,
+                                "enum": [
+                                  "User",
+                                  "Team",
+                                  "IntegrationInstallation",
+                                  "RepositoryRole"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "boolean",
+                            "name": "enabled",
+                            "description": "<p>Whether to restrict review dismissal to specific actors.</p>",
+                            "isRequired": true
+                          }
+                        ]
+                      },
+                      {
                         "type": "boolean",
                         "name": "require_code_owner_review",
                         "description": "<p>Require an approving review in pull requests that modify files that have a designated code owner.</p>",
@@ -4061,7 +4213,7 @@
               {
                 "type": "object",
                 "name": "copilot_code_review",
-                "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.</p>",
+                "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.</p>",
                 "childParamsGroups": [
                   {
                     "type": "string",
@@ -4442,6 +4594,44 @@
                         "isRequired": true
                       },
                       {
+                        "type": "object",
+                        "name": "dismissal_restriction",
+                        "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                        "childParamsGroups": [
+                          {
+                            "type": "array of objects",
+                            "name": "allowed_actors",
+                            "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                            "childParamsGroups": [
+                              {
+                                "type": "integer",
+                                "name": "id",
+                                "description": "<p>ID of the actor that can dismiss reviews.</p>",
+                                "isRequired": true
+                              },
+                              {
+                                "type": "string",
+                                "name": "type",
+                                "description": "<p>The type of the actor</p>",
+                                "isRequired": true,
+                                "enum": [
+                                  "User",
+                                  "Team",
+                                  "IntegrationInstallation",
+                                  "RepositoryRole"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "type": "boolean",
+                            "name": "enabled",
+                            "description": "<p>Whether to restrict review dismissal to specific actors.</p>",
+                            "isRequired": true
+                          }
+                        ]
+                      },
+                      {
                         "type": "boolean",
                         "name": "require_code_owner_review",
                         "description": "<p>Require an approving review in pull requests that modify files that have a designated code owner.</p>",
@@ -4958,7 +5148,7 @@
               {
                 "type": "object",
                 "name": "copilot_code_review",
-                "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.</p>",
+                "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.</p>",
                 "childParamsGroups": [
                   {
                     "type": "string",
@@ -5342,6 +5532,44 @@
                             "name": "dismiss_stale_reviews_on_push",
                             "description": "<p>New, reviewable commits pushed will dismiss previous pull request review approvals.</p>",
                             "isRequired": true
+                          },
+                          {
+                            "type": "object",
+                            "name": "dismissal_restriction",
+                            "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                            "childParamsGroups": [
+                              {
+                                "type": "array of objects",
+                                "name": "allowed_actors",
+                                "description": "<p>Specify people, teams, or apps allowed to dismiss pull request reviews.</p>",
+                                "childParamsGroups": [
+                                  {
+                                    "type": "integer",
+                                    "name": "id",
+                                    "description": "<p>ID of the actor that can dismiss reviews.</p>",
+                                    "isRequired": true
+                                  },
+                                  {
+                                    "type": "string",
+                                    "name": "type",
+                                    "description": "<p>The type of the actor</p>",
+                                    "isRequired": true,
+                                    "enum": [
+                                      "User",
+                                      "Team",
+                                      "IntegrationInstallation",
+                                      "RepositoryRole"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "type": "boolean",
+                                "name": "enabled",
+                                "description": "<p>Whether to restrict review dismissal to specific actors.</p>",
+                                "isRequired": true
+                              }
+                            ]
                           },
                           {
                             "type": "boolean",
@@ -5860,7 +6088,7 @@
                   {
                     "type": "object",
                     "name": "copilot_code_review",
-                    "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and their premium requests quota has not reached the limit.</p>",
+                    "description": "<p>Request Copilot code review for new pull requests automatically if the author has access to Copilot code review and AI credits.</p>",
                     "childParamsGroups": [
                       {
                         "type": "string",

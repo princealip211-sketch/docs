@@ -22,7 +22,7 @@ You qualify for {% data variables.product.prodname_global_campus %} if you:
 
 * Are enrolled in a degree- or diploma-granting program, such as a high school, college, university, or homeschool.
 * Provide documents that prove your current student status. See [Academic email requirements](#academic-email-requirements) below.
-* Own a [{% data variables.product.prodname_dotcom %} personal account](/get-started/start-your-journey/creating-an-account-on-github).
+* Own a [{% data variables.product.prodname_dotcom %} personal account](/account-and-profile/how-tos/account-management/creating-an-account-on-github).
 * Are at least 13 years old.
 
 ## What documents can I use to prove I'm a student?
@@ -38,7 +38,7 @@ You qualify for {% data variables.product.prodname_global_campus %} if you:
 
 ### Your school requires an academic email address
 
-If the application asks for an academic email, you must add and verify one on your {% data variables.product.prodname_dotcom %} account before applying. See [AUTOTITLE](/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/adding-an-email-address-to-your-github-account).
+If the application asks for an academic email, you must add and verify one on your {% data variables.product.prodname_dotcom %} account before applying. See [AUTOTITLE](/account-and-profile/how-tos/email-preferences/adding-an-email-address-to-your-github-account).
 
 ### Your school does not provide an academic email address
 
@@ -56,4 +56,4 @@ Once your application is approved, navigate to your [{% data variables.product.p
 
 ## Further reading
 
-* [AUTOTITLE](/education/explore-the-benefits-of-teaching-and-learning-with-github-education/github-global-campus-for-students/why-wasnt-my-application-to-global-campus-for-students-approved)
+* [AUTOTITLE](/education/about-github-education/github-education-for-students/solving-problems-with-your-github-education-access)

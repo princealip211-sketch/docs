@@ -1445,6 +1445,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -1665,7 +1666,7 @@
       "owner_type",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "What is GitHub Copilot?"
+    "docs_reference_titles": "About GitHub Copilot"
   },
   {
     "action": "copilot.cfb_seat_assignment_refreshed",
@@ -1731,11 +1732,13 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "operation_type",
       "owner",
-      "owner_type"
+      "owner_type",
+      "user_programmatic_access_name"
     ]
   },
   {
@@ -1911,6 +1914,7 @@
       "actor_is_bot",
       "created_at",
       "excluded_paths",
+      "oauth_application_id",
       "operation_type",
       "owner_type",
       "public_repo",
@@ -2783,6 +2787,7 @@
       "user_id",
       "user_agent",
       "access_level",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -3418,6 +3423,7 @@
       "actor_is_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type",
       "owner",
       "owner_type",
@@ -4094,6 +4100,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "name",
@@ -4130,6 +4137,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -4164,6 +4172,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "name",
@@ -4844,6 +4853,9 @@
       "actor_is_bot",
       "application_client_id",
       "created_at",
+      "events_added",
+      "events_removed",
+      "events_unchanged",
       "integration",
       "name",
       "operation_type",
@@ -5065,7 +5077,8 @@
       "integration",
       "name",
       "oauth_application_id",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "/apps/maintaining-github-apps/suspending-a-github-app-installation"
   },
@@ -6311,7 +6324,8 @@
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "/organizations/managing-organization-settings/managing-the-publication-of-github-pages-sites-for-your-organization"
   },
@@ -6484,6 +6498,7 @@
       "user_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type"
     ],
     "docs_reference_titles": "Enforcing repository management policies in your enterprise"
@@ -7394,6 +7409,7 @@
       "user_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type"
     ],
     "docs_reference_titles": "/organizations/managing-peoples-access-to-your-organization-with-roles/adding-a-billing-manager-to-your-organization"
@@ -7537,7 +7553,8 @@
       "created_at",
       "oauth_application_id",
       "operation_type",
-      "team"
+      "team",
+      "user_programmatic_access_name"
     ]
   },
   {
@@ -8577,6 +8594,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -8610,8 +8628,10 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type"
     ]
   },
@@ -8642,6 +8662,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -8709,9 +8730,11 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "/communities/moderating-comments-and-conversations/limiting-interactions-in-your-organization#limiting-interactions-in-your-organization"
   },
@@ -8742,6 +8765,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -8810,6 +8834,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -9375,6 +9400,7 @@
       "actor_is_bot",
       "created_at",
       "issuer",
+      "oauth_application_id",
       "operation_type",
       "sso_url"
     ]
@@ -9408,6 +9434,7 @@
       "user_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type"
     ],
     "docs_reference_titles": "/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/displaying-ip-addresses-in-the-audit-log-for-your-organization"
@@ -9535,10 +9562,12 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "/organizations/managing-organization-settings/setting-team-creation-permissions-in-your-organization"
   },
@@ -11257,6 +11286,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -11292,10 +11322,12 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Defining custom patterns for secret scanning"
   },
@@ -11326,8 +11358,10 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type"
     ],
     "docs_reference_titles": "Defining custom patterns for secret scanning"
@@ -11456,8 +11490,10 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type"
     ],
     "docs_reference_titles": "Defining custom patterns for secret scanning"
@@ -11794,7 +11830,8 @@
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Push protection"
   },
@@ -11829,7 +11866,8 @@
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Push protection"
   },
@@ -12289,6 +12327,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
@@ -12397,6 +12436,7 @@
       "actor_is_agent",
       "actor_is_bot",
       "created_at",
+      "default_workflow_permissions_value",
       "oauth_application_id",
       "operation_type",
       "user_programmatic_access_name"
@@ -12472,7 +12512,8 @@
       "created_at",
       "oauth_application_id",
       "operation_type",
-      "user_programmatic_access_name"
+      "user_programmatic_access_name",
+      "workflow_permission_can_approve_pr_value"
     ],
     "docs_reference_titles": "/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization#preventing-github-actions-from-creating-or-approving-pull-requests"
   },
@@ -12539,6 +12580,7 @@
       "actor_is_bot",
       "created_at",
       "from_business",
+      "oauth_application_id",
       "operation_type",
       "to_business"
     ],
@@ -12574,6 +12616,7 @@
       "actor_is_bot",
       "created_at",
       "from_business",
+      "oauth_application_id",
       "operation_type",
       "to_business"
     ],
@@ -13339,7 +13382,7 @@
   },
   {
     "action": "organization_moderators.add_team",
-    "description": "N/A",
+    "description": "A team was added as an organization moderator.",
     "docs_reference_links": "N/A",
     "fields": [
       "@timestamp",
@@ -13372,7 +13415,7 @@
   },
   {
     "action": "organization_moderators.add_user",
-    "description": "N/A",
+    "description": "A user was added as an organization moderator.",
     "docs_reference_links": "N/A",
     "fields": [
       "@timestamp",
@@ -13404,7 +13447,7 @@
   },
   {
     "action": "organization_moderators.remove_team",
-    "description": "N/A",
+    "description": "A team was removed as an organization moderator.",
     "docs_reference_links": "N/A",
     "fields": [
       "@timestamp",
@@ -13437,7 +13480,7 @@
   },
   {
     "action": "organization_moderators.remove_user",
-    "description": "N/A",
+    "description": "A user was removed as an organization moderator.",
     "docs_reference_links": "N/A",
     "fields": [
       "@timestamp",
@@ -13696,7 +13739,8 @@
       "owner",
       "owner_id",
       "owner_type",
-      "role_permissions"
+      "role_permissions",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Permissions of custom organization roles"
   },
@@ -14824,6 +14868,7 @@
       "user_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type"
     ]
   },
@@ -15724,10 +15769,12 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_agent",
       "actor_is_bot",
       "created_at",
       "oauth_application_id",
-      "operation_type"
+      "operation_type",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "/issues/planning-and-tracking-with-projects/customizing-views-in-your-project/managing-your-views"
   },
@@ -15765,7 +15812,8 @@
       "project_id",
       "project_kind",
       "project_name",
-      "public_project"
+      "public_project",
+      "user_programmatic_access_name"
     ]
   },
   {
@@ -16893,6 +16941,7 @@
       "fingerprint",
       "key",
       "operation_type",
+      "public_repo",
       "read_only",
       "title"
     ],
@@ -17098,7 +17147,7 @@
       "topic",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/closing-a-pull-request"
+    "docs_reference_titles": "Closing a pull request"
   },
   {
     "action": "pull_request.converted_to_draft",
@@ -17138,7 +17187,7 @@
       "pull_request_url",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-stage-of-a-pull-request#converting-a-pull-request-to-a-draft"
+    "docs_reference_titles": "Changing the stage of a pull request"
   },
   {
     "action": "pull_request.create",
@@ -17179,7 +17228,7 @@
       "pull_request_url",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request"
+    "docs_reference_titles": "Creating a pull request"
   },
   {
     "action": "pull_request.create_review_request",
@@ -17223,7 +17272,7 @@
       "topic",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews"
+    "docs_reference_titles": "Pull request reviews"
   },
   {
     "action": "pull_request.in_progress",
@@ -17336,7 +17385,7 @@
       "topic",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/incorporating-changes-from-a-pull-request/merging-a-pull-request"
+    "docs_reference_titles": "Merging a pull request"
   },
   {
     "action": "pull_request.ready_for_review",
@@ -17376,7 +17425,7 @@
       "pull_request_url",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/changing-the-stage-of-a-pull-request#marking-a-pull-request-as-ready-for-review"
+    "docs_reference_titles": "Changing the stage of a pull request"
   },
   {
     "action": "pull_request.rebase",
@@ -17459,7 +17508,7 @@
       "topic",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews"
+    "docs_reference_titles": "Pull request reviews"
   },
   {
     "action": "pull_request.reopen",
@@ -17536,7 +17585,7 @@
       "topic",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/about-pull-request-reviews"
+    "docs_reference_titles": "Pull request reviews"
   },
   {
     "action": "pull_request_review_comment.delete",
@@ -17572,6 +17621,7 @@
       "oauth_application_id",
       "operation_type",
       "public_repo",
+      "topic",
       "user_programmatic_access_name"
     ]
   },
@@ -17692,7 +17742,7 @@
       "topic",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/dismissing-a-pull-request-review"
+    "docs_reference_titles": "Dismissing a pull request review"
   },
   {
     "action": "pull_request_review.submit",
@@ -17734,7 +17784,7 @@
       "topic",
       "user_programmatic_access_name"
     ],
-    "docs_reference_titles": "/pull-requests/collaborating-with-pull-requests/reviewing-changes-in-pull-requests/reviewing-proposed-changes-in-a-pull-request#submitting-your-review"
+    "docs_reference_titles": "Reviewing proposed changes in a pull request"
   },
   {
     "action": "repo.access",
@@ -19998,6 +20048,7 @@
       "actor_is_agent",
       "actor_is_bot",
       "created_at",
+      "default_workflow_permissions_value",
       "oauth_application_id",
       "operation_type",
       "public_repo",
@@ -20079,7 +20130,8 @@
       "operation_type",
       "public_repo",
       "user_programmatic_access_name",
-      "visibility"
+      "visibility",
+      "workflow_permission_can_approve_pr_value"
     ],
     "docs_reference_titles": "/repositories/managing-your-repositorys-settings-and-features/enabling-features-for-your-repository/managing-github-actions-settings-for-a-repository#preventing-github-actions-from-creating-or-approving-pull-requests"
   },
@@ -20781,7 +20833,8 @@
       "created_at",
       "oauth_application_id",
       "operation_type",
-      "public_repo"
+      "public_repo",
+      "user_programmatic_access_name"
     ]
   },
   {
@@ -21419,6 +21472,7 @@
       "user",
       "user_id",
       "user_agent",
+      "actor_is_bot",
       "created_at",
       "operation_type"
     ],
@@ -21746,7 +21800,8 @@
       "created_at",
       "oauth_application_id",
       "operation_type",
-      "public_repo"
+      "public_repo",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Defining custom patterns for secret scanning"
   },
@@ -21779,8 +21834,10 @@
       "user_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type",
-      "public_repo"
+      "public_repo",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Defining custom patterns for secret scanning"
   },
@@ -21917,7 +21974,8 @@
       "created_at",
       "oauth_application_id",
       "operation_type",
-      "public_repo"
+      "public_repo",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Defining custom patterns for secret scanning"
   },
@@ -22252,7 +22310,8 @@
       "oauth_application_id",
       "operation_type",
       "public_repo",
-      "topic"
+      "topic",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Push protection"
   },
@@ -23104,6 +23163,7 @@
       "oauth_application_id",
       "operation_type",
       "public_repo",
+      "reason",
       "topic",
       "user_programmatic_access_name"
     ]
@@ -23141,6 +23201,7 @@
       "oauth_application_id",
       "operation_type",
       "public_repo",
+      "reason",
       "topic",
       "user_programmatic_access_name"
     ]
@@ -23250,6 +23311,7 @@
       "user_agent",
       "actor_is_bot",
       "created_at",
+      "oauth_application_id",
       "operation_type",
       "owner"
     ],
@@ -23367,7 +23429,8 @@
       "oauth_application_id",
       "operation_type",
       "owner",
-      "role_permissions"
+      "role_permissions",
+      "user_programmatic_access_name"
     ],
     "docs_reference_titles": "Managing custom repository roles for an organization"
   },
@@ -24232,6 +24295,7 @@
       "source",
       "source_slug",
       "started_at",
+      "topic",
       "type",
       "type_slug"
     ],
@@ -26896,6 +26960,7 @@
       "head_branch",
       "head_sha",
       "name",
+      "oauth_application_id",
       "operation_type",
       "public_repo",
       "run_attempt",
@@ -26903,6 +26968,7 @@
       "started_at",
       "topic",
       "trigger_id",
+      "user_programmatic_access_name",
       "workflow_id",
       "workflow_run_id"
     ],

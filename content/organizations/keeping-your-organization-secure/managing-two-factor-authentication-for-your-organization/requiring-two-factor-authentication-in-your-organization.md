@@ -23,7 +23,7 @@ category:
 
 {% data reusables.two_fa.about-2fa %} You can require all {% ifversion fpt or ghec %}members, outside collaborators, and billing managers{% else %}members and outside collaborators{% endif %} in your organization to enable two-factor authentication on {% data variables.product.github %}. For more information about two-factor authentication, see [AUTOTITLE](/authentication/securing-your-account-with-two-factor-authentication-2fa).
 
-You can also require two-factor authentication for organizations in an enterprise. For more information, see [AUTOTITLE](/admin/policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-security-settings-in-your-enterprise).
+You can also require two-factor authentication for organizations in an enterprise. For more information, see [AUTOTITLE](/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-security-settings-in-your-enterprise).
 
 > [!NOTE]
 > Some of the users in your organization may have been selected for mandatory two-factor authentication enrollment by {% data variables.product.prodname_dotcom %}, but it has no impact on how you enable the 2FA requirement for your organization.
@@ -58,9 +58,9 @@ Before you require use of two-factor authentication, we recommend notifying {% i
 
 ### Requiring secure methods of two-factor authentication in your organization
 
-Alongside requiring two-factor authentication, you can require that organization members, billing managers, and outside collaborators use secure methods of 2FA. Secure two-factor methods are passkeys, security keys, authenticator apps, and the GitHub mobile app. Users who do not have a secure method of 2FA configured, or who have any insecure method (such as SMS) configured, will be prevented from accessing organization resources.
+Alongside requiring two-factor authentication, you can require that organization members, billing managers, and outside collaborators use secure methods of 2FA exclusively. Secure two-factor methods are passkeys, security keys, authenticator apps, and the GitHub mobile app. Users who do not have a secure method of 2FA configured, or who have any insecure method (such as SMS) configured, will be prevented from accessing organization resources.
 
-Before you require secure methods of two-factor authentication, we recommend notifying organization members, outside collaborators, and billing managers and asking them to set up secure 2FA for their accounts. You can see if members and outside collaborators already use secure methods of 2FA on each organization's People page. For more information, see [AUTOTITLE](/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/viewing-whether-users-in-your-organization-have-2fa-enabled).
+Before you require secure methods of two-factor authentication, we recommend notifying organization members, outside collaborators, and billing managers: you should instruct them to set up secure 2FA for their accounts and then remove insecure methods of 2FA (including SMS). On each organization's People page, you can see if members and outside collaborators already use secure methods of 2FA exclusively. For more information, see [AUTOTITLE](/organizations/keeping-your-organization-secure/managing-two-factor-authentication-for-your-organization/viewing-whether-users-in-your-organization-have-2fa-enabled).
 
 {% data reusables.organizations.secure_two_factor_authentication %}
 {% data reusables.organizations.secure_two_factor_authentication_confirm %}
@@ -70,7 +70,7 @@ Before you require secure methods of two-factor authentication, we recommend not
 
 ## Viewing people who were removed from your organization
 
-To view people who were automatically removed from your organization for non-compliance when you required two-factor authentication, you can search your organization's audit log for people removed from your organization. The audit log event will show if a person was removed for 2FA non-compliance. For more information, see [AUTOTITLE](/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#accessing-the-audit-log).
+To view people who were automatically removed from your organization for non-compliance when you required two-factor authentication, you can search your organization's audit log for people removed from your organization. The audit log event will show if a person was removed for 2FA non-compliance. For more information, see [AUTOTITLE](/organizations/keeping-your-organization-secure/managing-security-settings-for-your-organization/reviewing-the-audit-log-for-your-organization#accessing-the-organizations-audit-log-via-the-web-interface).
 
 {% data reusables.profile.access_org %}
 {% data reusables.profile.org_settings %}

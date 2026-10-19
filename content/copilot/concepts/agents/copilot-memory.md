@@ -33,13 +33,13 @@ We typically refer to these repository-level facts and user-level preferences as
 
 ## Feature availability
 
-{% data variables.copilot.copilot_memory %} is currently used by {% data variables.copilot.copilot_cloud_agent %}, {% data variables.copilot.copilot_code-review_short %}, and {% data variables.copilot.copilot_cli_short %}.
+{% data variables.copilot.copilot_memory %} is currently used by {% data variables.copilot.copilot_cloud_agent %}, {% data variables.copilot.copilot_code-review_short %}, {% data variables.copilot.copilot_cli_short %}, and agentic autofix.
 
 Facts and preferences captured by one {% data variables.product.prodname_copilot_short %} feature can be used by another. For example, if {% data variables.copilot.copilot_cloud_agent %} discovers how your repository handles database connections, {% data variables.copilot.copilot_code-review_short %} can later apply that knowledge to spot inconsistent patterns in a pull request. Similarly, if {% data variables.copilot.copilot_code-review_short %} learns that certain settings must stay synchronized across two files, {% data variables.copilot.copilot_cloud_agent %} will know to update both files when changing one.
 
 A few feature-specific limits apply:
 
-* {% data variables.copilot.copilot_cli_short %} only applies stored facts and preferences for the user who initiated the operation.
+* {% data variables.copilot.copilot_cli_short %} applies repository-level facts and the user-level preferences of the user who initiated the operation.
 * {% data variables.copilot.copilot_code-review_short %} uses repository-level facts only. User-level preferences are not applied during code review.
 
 ## Benefits of using {% data variables.copilot.copilot_memory %}

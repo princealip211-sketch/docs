@@ -6,20 +6,12 @@ intro: Learn how you can use {% data variables.product.prodname_copilot %} in yo
 versions:
   feature: copilot
 children:
-  - /about-copilot-cli
   - /comparing-cli-features
-  - /copilot-cli-in-github-actions
-  - /cancel-and-roll-back
-  - /about-remote-control
-  - /about-custom-agents
-  - /autopilot
-  - /fleet
-  - /research
-  - /chronicle
-  - /rubber-duck
-  - /lsp-servers
   - /context-management
-  - /tool-search
+  - /about-custom-agents
+  - /lsp-servers
+  - /about-cli-extensions
+  - /understanding-local-sandboxing
 contentType: concepts
 docsTeamMetrics:
   - copilot-cli

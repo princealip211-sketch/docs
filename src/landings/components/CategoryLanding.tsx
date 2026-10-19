@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
-import cx from 'classnames'
 import { CookBookArticleCard } from './CookBookArticleCard'
 import { CookBookFilter } from './CookBookFilter'
 import { useTranslation } from '@/languages/components/useTranslation'
@@ -10,7 +9,6 @@ import { Lead } from '@/frame/components/ui/Lead'
 import { useCategoryLandingContext } from '@/frame/components/context/CategoryLandingContext'
 import { ClientSideRedirects } from '@/rest/components/ClientSideRedirects'
 import { RestRedirect } from '@/rest/components/RestRedirect'
-import { Breadcrumbs } from '@/frame/components/page-header/Breadcrumbs'
 import { ArticleCardItems } from '@/landings/types'
 import { UtmPreserver } from '@/frame/components/UtmPreserver'
 
@@ -19,12 +17,11 @@ export const CategoryLanding = () => {
   const router = useRouter()
   const { title, intro, tocItems, spotlight, filters } = useCategoryLandingContext()
 
-  // The category filter is always shown. Surface and complexity are opt-in via
-  // the `filters` frontmatter array on the landing page.
+  // Always show the category filter; filters frontmatter controls surface and complexity.
   const showSurface = filters ? filters.includes('surface') : true
   const showComplexity = filters ? filters.includes('complexity') : false
 
-  // tocItems contains directories and its children, we only want the child articles
+  // Category landing cards use only child articles, not directory nodes.
   const onlyFlatItems: ArticleCardItems = tocItems.flatMap((item) => item.childTocItems || [])
 
   const [searchQuery, setSearchQuery] = useState('')
@@ -89,7 +86,6 @@ export const CategoryLanding = () => {
     setSelectedComplexity('All')
   }
 
-  // Helper function to find article data from tocItems
   const findArticleData = (articlePath: string) => {
     const cleanPath = articlePath.startsWith('/') ? articlePath.slice(1) : articlePath
     return onlyFlatItems.find(
@@ -99,7 +95,6 @@ export const CategoryLanding = () => {
     )
   }
 
-  // Process spotlight items to get complete data
   const processedSpotlight =
     spotlight?.map((spotlightItem) => {
       const articleData = findArticleData(spotlightItem.article)
@@ -116,14 +111,10 @@ export const CategoryLanding = () => {
     <DefaultLayout>
       <UtmPreserver />
       {router.route === '/[versionId]/rest/[category]' && <RestRedirect />}
-      {/* Doesn't matter *where* this is included because it will
-      never render anything. It always just return null. */}
+      {/* ClientSideRedirects renders null, so placement does not affect layout. */}
       <ClientSideRedirects />
 
       <div className="container-xl px-3 px-md-6 my-4" data-search="article-body">
-        <div className={cx('d-none d-xl-block mt-3 mr-auto width-full')}>
-          <Breadcrumbs />
-        </div>
         <ArticleTitle>{title}</ArticleTitle>
         {intro && <Lead data-search="lead">{intro}</Lead>}
 

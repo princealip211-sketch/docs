@@ -1,54 +1,105 @@
 import type { Octokit } from '@octokit/rest'
 
 import { fetchWithRetry } from '@/frame/lib/fetch-utils'
-import warmServer from '@/frame/lib/warm-server'
+import { makePageSurrogateKey } from '@/frame/middleware/set-fastly-surrogate-key'
 import github from './github'
 import { getActionContext } from './action-context'
 
-// Hard-purges the specific English URLs whose content changed in a production
-// deploy. It runs *in addition to* the routine soft purge of the whole
-// `language:en` surrogate key (see purge-fastly.ts / purge-fastly.yml).
-//
-// Why: the soft purge only marks `language:en` stale. With stale-while-
-// revalidate, Fastly keeps serving the pre-deploy copy of a just-changed page
-// until a background revalidation completes, so an author who reloads the page
-// they just edited can still see the old content for a while. (The classic
-// "add ?bla=1234 and it shows the new content" symptom: the query string is a
-// cache miss that fetches fresh, proving origin is fresh and the cached object
-// is stale.) A hard purge *evicts* the changed URLs so the next request fetches
-// fresh. By the time deployment succeeds, the old pods are already terminated
-// (Heaven waits for the rollout to fully reconcile), so this is deterministic.
-//
-// Scope: content/ only. data/ changes (reusables, variables, ...) fan out to
-// far too many URLs to enumerate cheaply, so they stay covered by the soft
-// purge of the whole language.
+// Purges changed English content pages by surrogate key after production deploys.
+// Hard purge lets PR authors see changes quickly. Data changes and AUTOTITLE
+// produce too many keys, and translations rebuild daily.
 
-const PROD_HOST = 'docs.github.com'
 const CONTENT_PREFIX = 'content/'
 
-// A defensive ceiling. A normal content deploy touches a handful of files ->
-// tens of URLs. If a deploy changes so much that we'd hard-purge more than this,
-// skip the targeted purge: the soft purge of the whole `language:en` key (which
-// always runs) already covers it, and we don't want to hammer Fastly.
-const MAX_URLS = 1000
+// Purge only English pages: content/*.md is the English source, and translations lag behind it.
+const PURGE_LANGUAGE = 'en'
 
-// The GitHub compare API returns at most 300 files per page. If we hit that, the
-// deploy is large enough that the soft-purge-all is the right tool; bail rather
-// than paginate through a huge change set.
+// Fastly's batch surrogate-key purge accepts at most 256 keys per request.
+// https://www.fastly.com/documentation/reference/api/purging/
+const MAX_KEYS_PER_PURGE = 256
+
+// The GitHub compare API returns at most 300 files per page. If a deploy changes
+// that many, skip the targeted purge and let the short max-age refresh
+// everything rather than paginating through a huge change set.
 const COMPARE_FILE_LIMIT = 300
 
-// How many purge requests to keep in flight at once.
-const PURGE_CONCURRENCY = 10
+// Retry rate-limited HTTP 429 batches this many times before giving up.
+const PURGE_MAX_RATE_LIMIT_RETRIES = 5
+
+// Every key is purged twice because of Fastly shielding. A purge doesn't reach
+// every POP at the same instant, so a request arriving in between can repopulate
+// an already-purged edge node from the not-yet-purged shield, leaving the edge
+// holding pre-deploy content again. The second pass evicts that copy.
+// https://www.fastly.com/documentation/guides/full-site-delivery/purging/purging-a-url/
+const PURGE_PASSES = 2
+
+// The second pass waits long enough for repopulated edge copies to exist.
+// Otherwise the second purge runs too early, and re-population happens after it.
+// Fastly's suggested 2s has been too short in practice.
+// Manual purges in purge-fastly.ts share this timing.
+const DELAY_BEFORE_SECOND_PURGE = 20 * 1000
+
+// Jitter ceiling in ms keeps retries with the same reset timestamp from re-bursting.
+const PURGE_JITTER_MS = 150
+
+// Backoff bounds for retrying rate-limited purges. Additive linear growth from
+// BASE per attempt is capped at MAX. Fastly's rate-limit window resets
+// on the order of a second, so a batch just needs to wait for the next window.
+// This backoff also floors any server-provided hint so a hint that resolves to
+// ~0 can't collapse the retry to 0ms, and MAX caps any server-provided delay so
+// a single batch can't hang for the full rate-limit window.
+const PURGE_RATE_LIMIT_BASE_DELAY_MS = 1000
+const PURGE_RATE_LIMIT_MAX_DELAY_MS = 30_000
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+// How long to wait before retrying a rate-limited purge. Prefers Fastly's
+// own hints (Retry-After in seconds or as an HTTP date; else Fastly-RateLimit-
+// Reset as a Unix timestamp), but floors that hint at the additive backoff so a
+// stale or current-second reset (which computes to <= 0) can't produce a 0ms
+// retry that just re-hammers the limiter. Jitter is always added to decorrelate
+// concurrent retries that saw the same reset timestamp. The result is clamped to
+// [0, PURGE_RATE_LIMIT_MAX_DELAY_MS].
+export function rateLimitDelayMs(response: Response, attempt: number): number {
+  const clamp = (ms: number) => Math.min(Math.max(0, ms), PURGE_RATE_LIMIT_MAX_DELAY_MS)
+
+  const backoff = PURGE_RATE_LIMIT_BASE_DELAY_MS * (attempt + 1)
+  const hintMs = serverRetryHintMs(response) ?? 0
+  const jitter = Math.floor(Math.random() * PURGE_JITTER_MS)
+
+  return clamp(Math.max(hintMs, backoff) + jitter)
+}
+
+// Fastly's suggested wait from a 429 response, in ms, or null if it sends no
+// usable hint. Can be negative (stale) or zero; callers must floor it.
+function serverRetryHintMs(response: Response): number | null {
+  const retryAfter = response.headers.get('retry-after')
+  if (retryAfter) {
+    const seconds = Number(retryAfter)
+    if (Number.isFinite(seconds)) return seconds * 1000
+    const dateMs = Date.parse(retryAfter)
+    if (!Number.isNaN(dateMs)) return dateMs - Date.now()
+  }
+
+  const reset = response.headers.get('fastly-ratelimit-reset')
+  if (reset) {
+    const resetSeconds = Number(reset)
+    if (Number.isFinite(resetSeconds)) return resetSeconds * 1000 - Date.now()
+  }
+
+  return null
+}
 
 type ChangedFile = {
   filename: string
   status: string
 }
 
-// The most recent production deployment that was actually live before `headSha`.
-// We diff against this to find what changed in the current deploy. The merge
-// queue can batch several PRs into one deploy, so this range can span multiple
-// merge commits — that's intentional, we want every changed file in the batch.
+// The most recent production deployment that was live before headSha. Diff
+// against this to find the current deploy's changes. The merge queue can batch
+// several PRs into one deploy, so this range can span multiple merge commits.
 export async function resolvePreviousProductionSha(
   octokit: Octokit,
   owner: string,
@@ -70,11 +121,7 @@ export async function resolvePreviousProductionSha(
       deployment_id: deployment.id,
       per_page: 30,
     })
-    // Require evidence the sha was actually live: a `success` status. The
-    // previous live deploy keeps its `success` status in history even after a
-    // newer deploy marks it `inactive`, so this still finds it. We deliberately
-    // do NOT accept `inactive` alone, since a deploy that failed and was later
-    // auto-inactivated never served traffic and would give a wrong base.
+    // Require success because inactive alone can come from a failed deploy that never served.
     if (statuses.some((status) => status.state === 'success')) {
       return deployment.sha
     }
@@ -83,16 +130,16 @@ export async function resolvePreviousProductionSha(
 }
 
 // The content/*.md files that changed between two commits. Removed files are
-// excluded: there's no page left to derive permalinks from. Their old URL is
-// covered by the soft purge of the whole language plus the redirect that
-// replaces a removed/renamed page, so it isn't enumerated here.
+// excluded: there's no page left to derive a key from. Their old URL is covered
+// by the redirect that replaces a removed/renamed page plus the short max-age,
+// so it isn't enumerated here.
 //
-// Note: compareCommitsWithBasehead uses three-dot (merge-base) semantics. For
+// compareCommitsWithBasehead uses three-dot merge-base semantics. For
 // normal forward-moving deploys that equals the tree diff. For a rollback (head
 // is an ancestor of, or diverged from, the previous live sha) it can miss the
-// reverted files; those simply fall back to the existing soft-purge-of-all
-// behavior, so it's not a regression. Returns null if the change set is too
-// large to handle as a targeted purge.
+// reverted files; those simply fall back to the short max-age refresh, so it's
+// not a regression. Returns null if the change set is too large to handle as a
+// targeted purge.
 export async function getChangedContentFiles(
   octokit: Octokit,
   owner: string,
@@ -121,59 +168,72 @@ export async function getChangedContentFiles(
     .map((file) => ({ filename: file.filename, status: file.status }))
 }
 
-// Map changed content files to the full English production URLs Fastly caches.
-// `permalinksFor` looks up a page's English permalink paths by its relativePath
-// (the path under content/). A page yields one URL per applicable version
-// (e.g. fpt, ghec, each ghes release). Unknown files (e.g. a page that doesn't
-// resolve to permalinks) are skipped.
-export function contentFilesToEnglishUrls(
+// Map changed content files to their per-page surrogate keys, deduped. One key
+// per source page, and that single key covers every version URL of the page,
+// including fpt, ghec, and each GHES release. A page that changed once is purged
+// once regardless of how many versions it fans out to. The key is derived purely
+// from the language and the path under content/, matching what the response
+// middleware emits, so the purge need not warm the server or resolve permalinks.
+export function contentFilesToPageKeys(
   changedFiles: ChangedFile[],
-  permalinksFor: (relativePath: string) => string[],
+  langCode: string = PURGE_LANGUAGE,
 ): string[] {
-  const urls = new Set<string>()
+  const keys = new Set<string>()
   for (const file of changedFiles) {
     const relativePath = file.filename.slice(CONTENT_PREFIX.length)
-    for (const href of permalinksFor(relativePath)) {
-      urls.add(`https://${PROD_HOST}${href}`)
-    }
+    const key = makePageSurrogateKey(langCode, relativePath)
+    if (key) keys.add(key)
   }
-  return [...urls]
+  return [...keys]
 }
 
-// Build relativePath -> English permalink hrefs from the warmed page list.
-async function loadEnglishPermalinkIndex(): Promise<Map<string, string[]>> {
-  const { pageList } = await warmServer(['en'])
-  const index = new Map<string, string[]>()
-  for (const page of pageList) {
-    if (page.languageCode !== 'en') continue
-    const hrefs = page.permalinks
-      .filter((permalink) => permalink.languageCode === 'en')
-      .map((permalink) => permalink.href)
-    if (hrefs.length) {
-      index.set(page.relativePath, hrefs)
-    }
+export function chunk<T>(items: T[], size: number): T[][] {
+  const batches: T[][] = []
+  for (let index = 0; index < items.length; index += size) {
+    batches.push(items.slice(index, index + size))
   }
-  return index
+  return batches
 }
 
-// Single-URL hard purge. Fastly's URL purge API is host+path scoped (not service
-// scoped) and uses only the Fastly-Key. Omitting the soft-purge header makes it
-// a hard purge: the object is evicted, so the next request is a fresh miss.
-// https://www.fastly.com/documentation/reference/api/purging/#purge-a-url
-async function hardPurgeUrl(url: string, fastlyToken: string): Promise<void> {
-  const withoutScheme = url.replace(/^https?:\/\//, '')
-  const response = await fetchWithRetry(
-    `https://api.fastly.com/purge/${withoutScheme}`,
-    {
-      method: 'POST',
-      headers: {
-        'fastly-key': fastlyToken,
-        accept: 'application/json',
+// Soft purges can fail to clear content when origin returns 304 Not Modified,
+// because a 304 extends the stale object.
+// https://www.fastly.com/documentation/reference/api/purging/
+async function purgeKeyBatch(
+  keys: string[],
+  fastlyToken: string,
+  serviceId: string,
+  soft: boolean,
+  rateLimitDelayFn: (response: Response, attempt: number) => number,
+): Promise<void> {
+  for (let attempt = 0; ; attempt++) {
+    const response = await fetchWithRetry(
+      `https://api.fastly.com/service/${encodeURIComponent(serviceId)}/purge`,
+      {
+        method: 'POST',
+        headers: {
+          'fastly-key': fastlyToken,
+          accept: 'application/json',
+          'content-type': 'application/json',
+          ...(soft ? { 'fastly-soft-purge': '1' } : {}),
+        },
+        body: JSON.stringify({ surrogate_keys: keys }),
       },
-    },
-    { retries: 3, timeout: 30_000, throwHttpErrors: false },
-  )
-  if (!response.ok) {
+      { retries: 3, timeout: 30_000, throwHttpErrors: false },
+    )
+    if (response.ok) return
+
+    // fetchWithRetry does not retry 429 here, so retry the batch and honor Fastly's hint.
+    if (response.status === 429 && attempt < PURGE_MAX_RATE_LIMIT_RETRIES) {
+      const waitMs = rateLimitDelayFn(response, attempt)
+      console.warn(
+        `Fastly rate-limited batch purge; retrying in ${waitMs}ms (attempt ${
+          attempt + 1
+        }/${PURGE_MAX_RATE_LIMIT_RETRIES})`,
+      )
+      await sleep(waitMs)
+      continue
+    }
+
     let body = ''
     try {
       body = await response.text()
@@ -181,31 +241,47 @@ async function hardPurgeUrl(url: string, fastlyToken: string): Promise<void> {
       body = ''
     }
     throw new Error(
-      `Fastly URL purge failed for ${url}: HTTP ${response.status} ${response.statusText}${
+      `Fastly batch surrogate-key purge failed: HTTP ${response.status} ${response.statusText}${
         body ? `: ${body}` : ''
       }`,
     )
   }
 }
 
-// Purge every URL, bounded concurrency, collecting failures so one bad URL
-// doesn't drop the rest. Throws at the end if any failed so the workflow's
-// failure alerting fires.
-export async function hardPurgeUrls(
-  urls: string[],
-  fastlyToken: string,
-  concurrency = PURGE_CONCURRENCY,
-): Promise<void> {
-  const queue = [...urls]
-  const errors: Error[] = []
+type PurgeSurrogateKeysOptions = {
+  soft?: boolean
+  rateLimitDelayFn?: (response: Response, attempt: number) => number
+  sleepFn?: (ms: number) => Promise<void>
+}
 
-  async function worker() {
-    while (queue.length) {
-      const url = queue.shift()
-      if (!url) break
+// Purge every batch twice, so the second pass clears edge copies refilled from the shield.
+// Collect failures so one bad batch doesn't skip the rest,
+// then throw so the workflow's failure alerting fires.
+export async function purgeSurrogateKeys(
+  keys: string[],
+  fastlyToken: string,
+  serviceId: string,
+  {
+    soft = false,
+    rateLimitDelayFn = rateLimitDelayMs,
+    sleepFn = sleep,
+  }: PurgeSurrogateKeysOptions = {},
+): Promise<void> {
+  const batches = chunk(keys, MAX_KEYS_PER_PURGE)
+  const errors: Error[] = []
+  let attempts = 0
+  const mode = soft ? 'Soft' : 'Hard'
+
+  const purgeAllBatches = async (pass: number): Promise<void> => {
+    for (const [index, batch] of batches.entries()) {
+      const label =
+        `pass ${pass}/${PURGE_PASSES}, batch ${index + 1}/${batches.length} ` +
+        `(${batch.length} key(s))`
+      attempts++
       try {
-        console.log(`Hard-purging ${url}`)
-        await hardPurgeUrl(url, fastlyToken)
+        console.log(`${mode}-purging ${label}...`)
+        await purgeKeyBatch(batch, fastlyToken, serviceId, soft, rateLimitDelayFn)
+        console.log(`${mode}-purged ${label}.`)
       } catch (error) {
         console.error(error)
         errors.push(error instanceof Error ? error : new Error(String(error)))
@@ -213,17 +289,27 @@ export async function hardPurgeUrls(
     }
   }
 
-  await Promise.all(Array.from({ length: Math.min(concurrency, urls.length) }, worker))
+  for (let pass = 1; pass <= PURGE_PASSES; pass++) {
+    // A failed first pass still gets a second one because giving up guarantees stale content.
+    if (pass > 1) {
+      console.log(`Waiting ${DELAY_BEFORE_SECOND_PURGE}ms before pass ${pass}...`)
+      await sleepFn(DELAY_BEFORE_SECOND_PURGE)
+    }
+    await purgeAllBatches(pass)
+  }
 
   if (errors.length) {
-    throw new Error(`${errors.length} of ${urls.length} URL purge(s) failed`)
+    throw new Error(`${errors.length} of ${attempts} batch purge(s) failed`)
   }
 }
 
 async function main() {
-  const { FASTLY_TOKEN, HEAD_SHA } = process.env
+  const { FASTLY_TOKEN, FASTLY_SERVICE_ID, HEAD_SHA } = process.env
   if (!FASTLY_TOKEN) {
     throw new Error('FASTLY_TOKEN not detected; refusing to purge')
+  }
+  if (!FASTLY_SERVICE_ID) {
+    throw new Error('FASTLY_SERVICE_ID not detected; refusing to purge')
   }
 
   const context = getActionContext()
@@ -238,48 +324,35 @@ async function main() {
 
   const baseSha = await resolvePreviousProductionSha(octokit, owner, repo, headSha)
   if (!baseSha) {
-    // First-ever deploy, or we couldn't find a prior production deploy. The
-    // soft purge already ran, so just no-op rather than fail the workflow.
+    // The short max-age refreshes everything when there is no prior production deploy.
     console.warn('No previous production deployment found; skipping targeted purge.')
     return
   }
-  console.log(`Diffing content between ${baseSha}..${headSha}`)
+  console.log(`Diffing content between ${baseSha}..${headSha}...`)
 
   const changedFiles = await getChangedContentFiles(octokit, owner, repo, baseSha, headSha)
   if (changedFiles === null) {
     console.warn(
       `Change set is too large (>= ${COMPARE_FILE_LIMIT} files); ` +
-        'relying on the soft purge of the whole language instead.',
+        'relying on the short max-age to refresh instead.',
     )
     return
   }
   if (!changedFiles.length) {
-    console.log('No content/ files changed in this deploy; nothing to hard-purge.')
+    console.log('No content/ files changed in this deploy; nothing to purge.')
     return
   }
-  console.log(`${changedFiles.length} changed content file(s).`)
+  console.log(`Found ${changedFiles.length} changed content file(s).`)
 
-  const permalinkIndex = await loadEnglishPermalinkIndex()
-  const urls = contentFilesToEnglishUrls(
-    changedFiles,
-    (relativePath) => permalinkIndex.get(relativePath) || [],
-  )
-
-  if (!urls.length) {
-    console.log('Changed content files did not resolve to any English URLs; nothing to purge.')
-    return
-  }
-  if (urls.length > MAX_URLS) {
-    console.warn(
-      `Resolved ${urls.length} URLs (> ${MAX_URLS}); skipping targeted purge and ` +
-        'relying on the soft purge of the whole language instead.',
-    )
+  const keys = contentFilesToPageKeys(changedFiles)
+  if (!keys.length) {
+    console.log('Changed content files did not resolve to any page keys; nothing to purge.')
     return
   }
 
-  console.log(`Hard-purging ${urls.length} English URL(s)...`)
-  await hardPurgeUrls(urls, FASTLY_TOKEN)
-  console.log('Done.')
+  console.log(`Hard-purging ${keys.length} page key(s)...`)
+  await purgeSurrogateKeys(keys, FASTLY_TOKEN, FASTLY_SERVICE_ID)
+  console.log(`Hard-purged ${keys.length} page key(s).`)
 }
 
 const isEntryPoint =

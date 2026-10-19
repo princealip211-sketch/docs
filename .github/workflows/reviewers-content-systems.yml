@@ -1,8 +1,7 @@
 name: Reviewers - Content Systems
 
-# **What it does**: Automatically add reviewers based on paths, but only for the docs-internal repo.
-# **Why we have it**: So we can have reviewers automatically without getting open source notifications.
-# **Who does it impact**: Docs team.
+# Internal content-systems paths request docs-content-systems review.
+# Restricting to docs-internal avoids public-repo reviewer notifications.
 
 on:
   pull_request:
@@ -35,18 +34,11 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-
-      - name: Generate GitHub App token
-        id: app-token
-        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
-        with:
-          app-id: ${{ secrets.DOCS_BOT_APP_ID }}
-          private-key: ${{ secrets.DOCS_BOT_APP_PRIVATE_KEY }}
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Add content systems as a reviewer
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          GH_TOKEN: ${{ secrets.DOCS_BOT_PAT_BASE }}
         uses: ./.github/actions/retry-command
         with:
           command: gh pr edit $PR --add-reviewer github/docs-content-systems --add-label reviewers-content-systems

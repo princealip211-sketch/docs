@@ -1,19 +1,20 @@
 // Generates an llms.txt file from popularity data and the docs page catalog.
 //
 // Usage:
-//   npm run generate-llms-txt -- --config data/llms-txt/config-docs.yml --output data/llms-txt/docs.md
-//   npm run generate-llms-txt -- --config data/llms-txt/config-monolith.yml --output /tmp/monolith.md
+//   npm run generate-llms-txt -- \
+//     --config data/llms-txt/config-docs.yml \
+//     --output data/llms-txt/docs.md
+//   npm run generate-llms-txt -- \
+//     --config data/llms-txt/config-monolith.yml \
+//     --output /tmp/monolith.md
 //
-// Both targets layer overrides on top of data/llms-txt/config-default.yml.
-// Writers can edit categories, pinned pages, thresholds, and copy in the
-// configs without touching this script.
-//
-// Requires DOCS_BOT_PAT_BASE for fetching popularity data from
-// github/docs-internal-data.
+// Each target overrides data/llms-txt/config-default.yml, so writers can change
+// categories, pinned pages, thresholds, and copy without editing this script.
+// Requires DOCS_BOT_PAT_BASE because popularity data lives in github/docs-internal-data.
 
 import fs from 'fs'
 
-import { load } from 'js-yaml'
+import { loadYaml } from '@/frame/lib/load-yaml'
 
 import { loadPageMap } from '@/frame/lib/page-data'
 import { renderContent } from '@/content-render/index'
@@ -44,11 +45,11 @@ export const ROLLUP_URL =
 const BASE_URL = 'https://docs.github.com'
 
 export function loadConfig(overridePath?: string): LlmsTxtConfig {
-  const defaults = load(fs.readFileSync(DEFAULT_CONFIG_PATH, 'utf8')) as Partial<LlmsTxtConfig>
+  const defaults = loadYaml(fs.readFileSync(DEFAULT_CONFIG_PATH, 'utf8')) as Partial<LlmsTxtConfig>
   if (!overridePath || overridePath === DEFAULT_CONFIG_PATH) {
     return defaults as LlmsTxtConfig
   }
-  const overrides = load(fs.readFileSync(overridePath, 'utf8')) as Partial<LlmsTxtConfig> | null
+  const overrides = loadYaml(fs.readFileSync(overridePath, 'utf8')) as Partial<LlmsTxtConfig> | null
   return { ...(defaults as LlmsTxtConfig), ...(overrides || {}) }
 }
 

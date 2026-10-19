@@ -22,7 +22,9 @@ This eliminates the need to:
  
 ## How automatic access works
  
-{% data variables.product.prodname_dependabot %} uses its `GITHUB_TOKEN` to request `packages: read` permission when pulling from `*.pkg.github.com` and {% data variables.product.prodname_container_registry_namespace %}. Any package that has granted your repository access through "Manage Actions access" accepts this token, the same way it would for a regular {% data variables.product.prodname_actions %} workflow. See [AUTOTITLE](/packages/learn-github-packages/configuring-a-packages-access-control-and-visibility#ensuring-workflow-access-to-your-package).git s
+{% data variables.product.prodname_dependabot %} uses its `GITHUB_TOKEN` to request `packages: read` permission when pulling from `*.pkg.github.com` and {% data variables.product.prodname_container_registry_namespace %}. Any package that has granted your repository access through "Manage Actions access" accepts this token, the same way it would for a regular {% data variables.product.prodname_actions %} workflow.
+
+Automatic {% data variables.product.prodname_registry %} credentials are used only as fallback authentication. Explicit registry credentials and normal registry routing take precedence.
  
 This works for every {% data variables.product.prodname_registry %} ecosystem that {% data variables.product.prodname_dependabot %} supports.
  
@@ -34,11 +36,11 @@ Use automatic access to {% data variables.product.github %}-hosted registries wh
 * You want to reduce credential management overhead.
 * You want to avoid silent update failures caused by expired {% data variables.product.pat_generic_plural %}.
  
-For third-party registries (such as Artifactory, Azure Artifacts, or Nexus), you can only use the `dependabot.yml` registry configuration or organization-level private registry settings. See [AUTOTITLE](/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configuring-access-to-private-registries-for-dependabot).
+For third-party registries (such as Artifactory, Azure Artifacts, or Nexus), you can only use the `dependabot.yml` registry configuration or organization-level private registry settings. See [AUTOTITLE](/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-access-to-private-registries).
  
 ## How to enable automatic access
  
-For each package that {% data variables.product.prodname_dependabot %} needs to read, you need to go to the package's settings page and add the repository that runs {% data variables.product.prodname_dependabot %} with **Read** access. See [AUTOTITLE](/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configuring-access-to-private-registries-for-dependabot#configuring-private-github-hosted-registries).
+For each package that {% data variables.product.prodname_dependabot %} needs to read, you need to go to the package's settings page and add the repository that runs {% data variables.product.prodname_dependabot %} with **Read** access. See [AUTOTITLE](/code-security/how-tos/secure-your-supply-chain/manage-your-dependency-security/configure-access-to-private-registries#configuring-private-github-hosted-registries).
  
 Once the repository has been granted access, {% data variables.product.prodname_dependabot %} can pull from that package automatically. You do not need to configure the `dependabot.yml` file, and you can remove any existing {% data variables.product.pat_generic %}-based registry entries you previously added for these packages.
  
